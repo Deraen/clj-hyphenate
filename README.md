@@ -1,6 +1,6 @@
 # clj-hyphenate
 
-A Clojure implementation of [Franklin M Liang's hyhpenation algorithm][2].
+A Clojure implementation of [Franklin M Liang's hyphenation algorithm][2].
 Patterns are automatically imported from [Hyphenator.js][1].
 
 ## Features
@@ -16,9 +16,9 @@ Patterns are automatically imported from [Hyphenator.js][1].
          '[clj-hyphenate.patterns.en-us :as en]))
 
 user=> (hyphenate-word en/rules "associate")
-"as­so­ciate"
+"as-so-ciate"
 user=> (hyphenate-word en/rules "hyphenation")
-"hy­phen­ation"
+"hy-phen-ation"
 ```
 
 ## License
