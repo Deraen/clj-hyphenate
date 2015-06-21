@@ -3,64 +3,85 @@
 
 (def +hyphen+ (char 173))
 
-(defn substrings [w]
-  (map #(.substring w %) (range (count w))))
+(defn substrings
+  "Retun all substring of a word. Returns collection of tuples
+   of start index and the substring."
+  [w]
+  (let [w-len (count w)]
+    (mapcat
+      (fn [i]
+        (map (fn [j]
+               [i (.substring w i (+ i j 1))])
+             (range (- w-len i))))
+      (range w-len))))
 
-(defn substrings2 [w]
-  (map #(vec (.substring w 0 (inc %))) (range (count w))))
+(defn update-points
+  "Return updated points vector where larger numbers from p are
+   merged into p. Merge starts from pstart.
 
-(defn hyphenate-word [{:keys [trie leftmin rightmin] :as rules}
+   e.g.
+     [0 0 1 1], points
+         [2 0], p, pstart 2
+   = [0 0 2 1], result"
+  [points pstart p]
+  (vec (concat (take pstart points)
+               (map max (drop pstart points) p)
+               (drop (+ pstart (count p)) points))))
+
+(defn limit-points [leftmin rightmin points]
+  ; leftmin is decremented because p part of tuple tells if the word should be
+  ; split AFTER the character.
+  (concat (repeat (dec leftmin) 0)
+          (->> points (take (- (count points) rightmin)) (drop (dec leftmin)))
+          (repeat rightmin 0)))
+
+(defn split-word [word points]
+  ; Points vector has two extras on the start and one at end
+  (loop [ws (map vector word points)
+         rs (list)
+         os (list)]
+    (cond
+      (empty? ws) (map (partial apply str) (reverse (cons (reverse os) rs)))
+
+      (not= (mod (second (first ws)) 2) 0) (recur (rest ws) (cons (reverse (cons (ffirst ws) os)) rs) (list))
+
+      :else (recur (rest ws) rs (cons (ffirst ws) os)))))
+
+(defn hyphenate-word [{:keys [leftmin rightmin trie] :as rules}
                       word
                       & {:keys [hyphen]
                          :or {hyphen +hyphen+}}]
   {:pre [(char? hyphen) (map? trie)]}
   (cond
-    ; If contains non-alphanumeric chars?
-    ; (re-find #"[^A-Za-z0-9]" word) word
-
-    ; If already has hyphen
+    ; If already has (soft-)hyphen
     (>= (.indexOf word (int hyphen)) 0)
     word
 
-    ; If has "-" split and hyphenate parts
+    ; If has "-" split then hyphenate parts
     (>= (.indexOf word (int \-)) 0)
     (->> (string/split word #"-")
          (map (partial hyphenate-word rules))
          (string/join "-"))
 
     :else
-    (let [ww (str "_" (string/lower-case word) "_")
-          ; TODO: Normalize to NFD
-          ss (vec (substrings ww))
-
+    (let [ww     (str "_" (string/lower-case word) "_")
           points
-          (reduce-kv (fn [points pstart ss]
-                       (reduce (fn [points ss2]
-                                 (if-let [t (get (get-in trie ss2) nil)]
-                                   (reduce-kv (fn [points x p]
-                                                (let [c (+ pstart x)
-                                                      cp (get points c 0)]
-                                                  (if (> p cp)
-                                                    (assoc points c p)
-                                                    points)))
-                                              points
-                                              t)
-                                   points))
-                               points
-                               (vec (substrings2 ss))))
-                     (vec (repeat (inc (count ww)) 0))
-                     ss)]
-      (reduce (fn [hw hp]
-                (str hw
-                     (if (and (<= leftmin hp (- (count word) rightmin)) (not= (mod (get points (inc hp)) 2) 0))
-                       hyphen)
-                     (get word hp)))
-              ""
-              (range (count ww))))))
+          (reduce
+            (fn [points [pstart ss]]
+              (if-let [hp (get (get-in trie (seq ss)) nil)]
+                (update-points points pstart hp)
+                points))
+            (vec (repeat (inc (count ww)) 0))
+            (substrings ww))]
+      ; First two and last item in points are padding
+      (->> points
+           (drop 2)
+           butlast
+           (limit-points leftmin rightmin)
+           (split-word word)
+           (string/join hyphen)))))
 
 (defn hyphenate-paragraph [rules p]
-  (-> p
-      (string/split #" ")
-      (->> (map (fn [x]
-                  (hyphenate-word rules x)))
-           (string/join " "))))
+  (->> (string/split p #" ")
+       (map (partial hyphenate-word rules))
+       (string/join " ")))

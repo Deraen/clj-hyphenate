@@ -11,10 +11,22 @@
 ;   (is (= [(vec "_table_") [6 6 6 7 6 6 6 6]] (split-exn "ta-ble"))))
 
 (deftest substrings-test
-  (is (= ["hello" "ello" "llo" "lo" "o"] (substrings "hello"))))
+  (is (= [[0 "h"] [0 "he"] [0 "hel"] [0 "hell"] [0 "hello"]
+          [1 "e"] [1 "el"] [1 "ell"] [1 "ello"]
+          [2 "l"] [2 "ll"] [2 "llo"]
+          [3 "l"] [3 "lo"]
+          [4 "o"]]
+         (substrings "hello"))))
 
-(deftest substrings2-test
-  (is (= [[\e] [\e \l] [\e \l \l] [\e \l \l \o]] (substrings2 "ello"))))
+(deftest update-points-test
+  (is (= [0 0 2 0] (update-points [0 0 0 0] 1 [0 2]))))
+
+(deftest limit-points-test
+  (is (= [0 1 1 0 0] (limit-points 2 2 [1 1 1 1 1]))))
+
+(deftest join-words-test
+  (is (= ["As" "so" "ci" "ate"]
+         (split-word "Associate" [0 1 2 1 2 3 4 0 0]))))
 
 (defn hyphenated [& s]
   (string/join +hyphen+ s))
