@@ -36,7 +36,6 @@
           (repeat rightmin 0)))
 
 (defn split-word [word points]
-  ; Points vector has two extras on the start and one at end
   (loop [ws (map vector word points)
          rs (list)
          os (list)]
