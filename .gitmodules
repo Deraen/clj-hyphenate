@@ -1,0 +1,3 @@
+[submodule "ext/Hyphenator"]
+	path = ext/Hyphenator
+	url = git@github.com:mnater/Hyphenator.git
