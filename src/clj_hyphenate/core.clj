@@ -3,13 +3,13 @@
 
 (def +hyphen+ (char 173))
 
-(defn- substrings [w]
+(defn substrings [w]
   (map #(.substring w %) (range (count w))))
 
-(defn- substrings2 [w]
+(defn substrings2 [w]
   (map #(vec (.substring w 0 (inc %))) (range (count w))))
 
-(defn hyphenate-word [{:keys [trie leftmin rightmin]}
+(defn hyphenate-word [{:keys [trie leftmin rightmin] :as rules}
                       word
                       & {:keys [hyphen]
                          :or {hyphen +hyphen+}}]
@@ -25,7 +25,7 @@
     ; If has "-" split and hyphenate parts
     (>= (.indexOf word (int \-)) 0)
     (->> (string/split word #"-")
-         (map hyphenate-word)
+         (map (partial hyphenate-word rules))
          (string/join "-"))
 
     :else
@@ -39,7 +39,7 @@
                                  (if-let [t (get (get-in trie ss2) nil)]
                                    (reduce-kv (fn [points x p]
                                                 (let [c (+ pstart x)
-                                                      cp (get points c)]
+                                                      cp (get points c 0)]
                                                   (if (> p cp)
                                                     (assoc points c p)
                                                     points)))
@@ -57,3 +57,10 @@
                      (get word hp)))
               ""
               (range (count ww))))))
+
+(defn hyphenate-paragraph [rules p]
+  (-> p
+      (string/split #" ")
+      (->> (map (fn [x]
+                  (hyphenate-word rules x)))
+           (string/join " "))))
