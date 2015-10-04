@@ -8,4 +8,5 @@
         Read on for some details about the implementation and to see what's
         up next for Boot ClojureScript tooling.")
 
-(b/with-progress-reporting (b/quick-bench (hyphenate-paragraph en/rules s) :verbose))
+(comment
+  (b/with-progress-reporting (b/quick-bench (hyphenate-paragraph en/rules s) :verbose)))
