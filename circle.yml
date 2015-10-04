@@ -1,0 +1,12 @@
+machine:
+  java:
+    version: oraclejdk8
+general:
+  artifacts:
+    - target/coverage
+test:
+  pre:
+    - mkdir $CIRCLE_TEST_REPORTS/lein
+  override:
+    - lein test-out junit $CIRCLE_TEST_REPORTS/lein/results.xml
+    - CLOVERAGE_VERSION=1.0.7-SNAPSHOT lein cloverage --codecov && bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json
