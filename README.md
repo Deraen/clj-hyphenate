@@ -11,6 +11,12 @@ Patterns are automatically imported from [Hyphenator.js][1].
   - `en-us`, `en-gb`, `fi`
   - Others may work. Some might not work as I left some special handing out.
 
+## Example uses
+
+- Use with Boot and Enlive to hyphenate html files
+    - Implementation: https://github.com/Deraen/deraen.github.io/blob/blog/src/blog/hyphenate.clj
+    - Output: http://deraen.github.io/hello-world/
+
 ## Usage
 
 ```clj
