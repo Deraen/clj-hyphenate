@@ -2,13 +2,16 @@
   (:require [clojure.test :refer :all]
             [clojure.string :as string]
             [clj-hyphenate.core :refer :all]
-            [clj-hyphenate.patterns.en-gb :as en]))
+            [clj-hyphenate.patterns :refer :all]
+            [clj-hyphenate.patterns.en-us :as en]))
 
-; (deftest split-pat-test
-;   (is (= [(vec "henat") [0 0 0 5 0 0]] (split-pat "hen5at"))))
+(deftest split-pat-test
+  (is (= [(vec "henat") [0 0 0 5]] (split-pat "hen5at")))
+  (is (= [(vec "abcd") [0 1 0 3 4]] (split-pat "a1bc3d4")))
+  (is (= [(vec "xq") [0 1]] (split-pat "x1q"))))
 
-; (deftest split-exn-test
-;   (is (= [(vec "_table_") [6 6 6 7 6 6 6 6]] (split-exn "ta-ble"))))
+(deftest split-exn-test
+  (is (= [(vec "_table_") [6 6 6 7 6 6 6 6]] (split-exn "ta-ble"))))
 
 (deftest substrings-test
   (is (= [[0 "h"] [0 "he"] [0 "hel"] [0 "hell"] [0 "hello"]
@@ -43,6 +46,9 @@
 
   (is (= (hyphenated "let" "ters")
          (hyphenate-word en/rules "letters")))
+
+  (is (= (hyphenated "pat" "tern")
+         (hyphenate-word en/rules "pattern")))
 
   (is (= "words"
          (hyphenate-word en/rules "words")))

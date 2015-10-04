@@ -6,7 +6,12 @@
 
 (defn split-pat [pat]
   [(vec (string/replace pat #"[0-9]" ""))
-   (mapv ascii-to-num (string/replace pat #"[_a-z]" "0"))])
+   (mapv (fn [x]
+           (try
+             (Integer/parseInt x)
+             (catch Exception _
+               0)))
+         (string/split pat #"[_a-z]"))])
 
 (defn split-exn [exn]
   (let [exn (str "_" exn "_")]
@@ -15,6 +20,7 @@
          (string/replace #"-" "7")
          (string/replace #"[_a-z]" "6")
          (->> (mapv ascii-to-num)))]))
+
 (defn partition-patterns
   "Takes map of pattern-len & pattern-str and returns a collection
    of patterns"
