@@ -81,6 +81,4 @@
            (string/join hyphen)))))
 
 (defn hyphenate-paragraph [rules p]
-  (->> (string/split p #" ")
-       (map (partial hyphenate-word rules))
-       (string/join " ")))
+  (string/replace p #"[^\s]+" (partial hyphenate-word rules)))

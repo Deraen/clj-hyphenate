@@ -58,3 +58,10 @@
   (is (= "DON’T"
          (hyphenate-word en/rules "DON’T")))
   )
+
+(deftest hyphenate-paragraph-test
+  (is (= (hyphenated "hy" "phen" "ation pat" "tern")
+         (hyphenate-paragraph en/rules "hyphenation pattern")))
+  (is (= (hyphenated "  hy" "phen" "ation  pat" "tern \n  	 ")
+         (hyphenate-paragraph en/rules "  hyphenation  pattern \n  	 "))
+      "Paragraph hyphenation doesn't touch whitespaces"))
