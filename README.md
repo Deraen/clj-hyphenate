@@ -1,4 +1,6 @@
-# clj-hyphenate
+# clj-hyphenate [![Circle CI](https://circleci.com/gh/Deraen/clj-hyphenate.svg?style=svg)](https://circleci.com/gh/Deraen/clj-hyphenate) [![codecov.io](http://codecov.io/github/Deraen/clj-hyphenate/coverage.svg?branch=master)](http://codecov.io/github/Deraen/clj-hyphenate?branch=master)
+
+[![Clojars Project](http://clojars.org/deraen/clj-hyphenate/latest-version.svg)](http://clojars.org/deraen/clj-hyphenate)
 
 A Clojure implementation of [Franklin M Liang's hyphenation algorithm][2].
 Patterns are automatically imported from [Hyphenator.js][1].
