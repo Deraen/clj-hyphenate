@@ -9,12 +9,12 @@ Patterns are automatically imported from [Hyphenator.js][1].
 
 - Supports ~~43~~ 3 languages
   - `en-us`, `en-gb`, `fi`
-  - Others may work. Some might not work as I left some special handing out.
+  - Others may work. Some might not work as I left some special handling out.
 
 ## Example uses
 
 - Use with Boot and Enlive to hyphenate html files
-    - Implementation: https://github.com/Deraen/deraen.github.io/blob/blog/src/blog/hyphenate.clj
+    - Implementation: https://github.com/Deraen/boot-hyphenate
     - Output: http://deraen.github.io/hello-world/
 
 ## Usage
