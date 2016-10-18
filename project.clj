@@ -10,7 +10,6 @@
                    :dependencies [[cheshire "5.5.0"]
                                   [criterium "0.4.3"]]}
              :build {:main clj-hyphenate.build}
-             :1.7 {:dependencies [[org.clojure/clojure "1.7.0"]]}
              :1.9 {:dependencies [[org.clojure/clojure "1.9.0-alpha11"]]}}
   :aliases {"build" ["with-profile" "+build" "run"]
-            "all" ["with-profile" "dev:dev,1.7:dev,1.9"]})
+            "all" ["with-profile" "dev:dev,1.9"]})

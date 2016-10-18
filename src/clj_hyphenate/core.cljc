@@ -11,7 +11,7 @@
     (mapcat
       (fn [i]
         (map (fn [j]
-               [i (.substring w i (+ i j 1))])
+               [i (subs w i (+ i j 1))])
              (range (- w-len i))))
       (range w-len))))
 
@@ -53,11 +53,11 @@
   {:pre [(char? hyphen) (map? trie)]}
   (cond
     ; If already has (soft-)hyphen
-    (>= (.indexOf word (int hyphen)) 0)
+    (string/index-of word hyphen)
     word
 
     ; If has "-" split then hyphenate parts
-    (>= (.indexOf word (int \-)) 0)
+    (string/index-of word \-)
     (->> (string/split word #"-")
          (map (partial hyphenate-word rules))
          (string/join "-"))
