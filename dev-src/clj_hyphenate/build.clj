@@ -34,7 +34,7 @@
           :when (.isFile f)
           :let [lang (string/replace (.getName f) #"\.js$" "")
                 json (io/file "tmp" (str lang ".json"))
-                target (io/file "src/clj_hyphenate/patterns/" (str (string/replace lang #"-" "_") ".clj"))]]
+                target (io/file "src/clj_hyphenate/patterns/" (str (string/replace lang #"-" "_") ".cljc"))]]
     (println lang)
     (spit target
           (with-out-str (cljize lang
